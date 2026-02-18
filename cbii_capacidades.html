@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>CBI+I — Capacidades y Servicios</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#12253a;--navy2:#1a3550;--teal:#1d6fa4;--accent:#3dabd4;
+  --gray1:#f4f6f9;--gray2:#e8ecf0;--gray3:#9aaab8;
+  --text:#22333f;--light:#5a7080;--white:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  color:var(--text);background:var(--gray1);min-height:100vh}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:var(--navy);
+  padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 12px rgba(0,0,0,.3);
+}
+.topbar-brand{display:flex;align-items:center;gap:10px}
+.brand-logo{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--teal),var(--accent));
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:13px;color:white;letter-spacing:-0.5px;
+}
+.brand-name{font-size:1.1rem;font-weight:800;color:white}
+.brand-name span{color:var(--accent)}
+.brand-sub{font-size:.65rem;color:rgba(255,255,255,.5);display:block;line-height:1.2}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(150deg,var(--navy) 0%,#1a3a56 60%,#1d506e 100%);
+  padding:32px 20px 28px;color:white;
+  position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;
+  width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(61,171,212,.15),transparent 70%);
+  top:-60px;right:-60px;pointer-events:none;
+}
+.hero-badge{
+  display:inline-block;
+  background:rgba(61,171,212,.2);border:1px solid rgba(61,171,212,.4);
+  color:var(--accent);font-size:.7rem;font-weight:700;
+  letter-spacing:1.2px;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;margin-bottom:12px;
+}
+.hero h1{font-size:1.55rem;font-weight:800;line-height:1.2;margin-bottom:8px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{font-size:.85rem;color:rgba(255,255,255,.72);line-height:1.55;max-width:360px}
+
+/* ── NAV TABS ── */
+.nav-tabs{
+  display:flex;gap:0;
+  background:var(--white);
+  border-bottom:1px solid var(--gray2);
+  position:sticky;top:64px;z-index:90;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.nav-tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  flex:1;min-width:90px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:12px 8px;cursor:pointer;
+  border:none;background:transparent;
+  color:var(--gray3);font-size:.72rem;font-weight:600;
+  letter-spacing:.4px;text-transform:uppercase;
+  border-bottom:3px solid transparent;
+  transition:color .2s,border-color .2s;
+  position:relative;
+}
+.tab-btn svg{width:20px;height:20px;fill:currentColor;transition:fill .2s}
+.tab-btn.active{color:var(--teal);border-bottom-color:var(--accent)}
+.tab-btn:hover:not(.active){color:var(--navy)}
+
+/* ── SECTIONS ── */
+.section{display:none;animation:fadeIn .25s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION INTRO ── */
+.sec-intro{
+  background:var(--white);
+  padding:22px 20px 18px;
+  border-bottom:1px solid var(--gray2);
+}
+.sec-label{
+  font-size:.68rem;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:4px;
+}
+.sec-title{font-size:1.2rem;font-weight:800;color:var(--navy);margin-bottom:8px}
+.sec-desc{font-size:.87rem;color:var(--light);line-height:1.6}
+
+/* ── AREA LIST ── */
+.area-list{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+
+/* ── ACCORDION ── */
+.area-card{
+  background:var(--white);
+  border-radius:12px;
+  border:1px solid var(--gray2);
+  overflow:hidden;
+  transition:box-shadow .2s;
+}
+.area-card.open{box-shadow:0 6px 24px rgba(18,37,58,.1);border-color:var(--accent)}
+
+.area-header{
+  display:flex;align-items:center;gap:12px;
+  padding:16px;cursor:pointer;
+  position:relative;
+}
+.area-header::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--teal),var(--accent));
+  border-radius:12px 12px 0 0;
+  opacity:0;transition:opacity .2s;
+}
+.area-card.open .area-header::before,.area-card:hover .area-header::before{opacity:1}
+
+.area-icon{
+  width:40px;height:40px;flex-shrink:0;border-radius:10px;
+  background:linear-gradient(135deg,var(--teal),var(--accent));
+  display:flex;align-items:center;justify-content:center;
+}
+.area-icon svg{width:20px;height:20px;fill:white}
+
+.area-info{flex:1;min-width:0}
+.area-name{font-size:.95rem;font-weight:700;color:var(--navy)}
+.area-count{font-size:.72rem;color:var(--gray3);margin-top:1px}
+
+.area-chevron{
+  width:28px;height:28px;flex-shrink:0;
+  border-radius:50%;background:var(--gray1);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,transform .3s;
+}
+.area-chevron svg{width:16px;height:16px;fill:var(--gray3);transition:fill .2s}
+.area-card.open .area-chevron{background:var(--accent);transform:rotate(180deg)}
+.area-card.open .area-chevron svg{fill:white}
+
+/* ── AREA BODY ── */
+.area-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .4s ease;
+}
+.area-card.open .area-body{max-height:1000px}
+
+.area-content{padding:0 16px 18px}
+.area-divider{height:1px;background:var(--gray2);margin-bottom:14px}
+
+.area-description{
+  background:linear-gradient(135deg,rgba(29,111,164,.08),rgba(61,171,212,.06));
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  padding:10px 14px;
+  font-size:.84rem;color:var(--light);line-height:1.6;
+  margin-bottom:14px;
+}
+
+.service-items{display:flex;flex-direction:column;gap:6px}
+.service-item{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:8px 10px;
+  background:var(--gray1);border-radius:8px;
+  font-size:.83rem;color:var(--text);line-height:1.4;
+}
+.service-item::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--accent);flex-shrink:0;margin-top:5px;
+}
+
+/* ── CAP SECTION CARDS ── */
+.cap-cards{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+
+.cap-card{
+  background:var(--white);border-radius:12px;
+  border:1px solid var(--gray2);
+  overflow:hidden;transition:box-shadow .2s;
+}
+.cap-card.open{box-shadow:0 6px 24px rgba(18,37,58,.1);border-color:var(--accent)}
+.cap-header{
+  display:flex;align-items:center;gap:12px;
+  padding:16px;cursor:pointer;position:relative;
+}
+.cap-header::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--teal),var(--accent));
+  opacity:0;transition:opacity .2s;border-radius:12px 12px 0 0;
+}
+.cap-card.open .cap-header::before,.cap-card:hover .cap-header::before{opacity:1}
+.cap-icon{
+  width:40px;height:40px;flex-shrink:0;border-radius:10px;
+  background:linear-gradient(135deg,var(--teal),var(--accent));
+  display:flex;align-items:center;justify-content:center;
+}
+.cap-icon svg{width:20px;height:20px;fill:white}
+.cap-title{flex:1;font-size:.95rem;font-weight:700;color:var(--navy)}
+.cap-chevron{
+  width:28px;height:28px;flex-shrink:0;border-radius:50%;
+  background:var(--gray1);display:flex;align-items:center;justify-content:center;
+  transition:background .2s,transform .3s;
+}
+.cap-chevron svg{width:16px;height:16px;fill:var(--gray3);transition:fill .2s}
+.cap-card.open .cap-chevron{background:var(--accent);transform:rotate(180deg)}
+.cap-card.open .cap-chevron svg{fill:white}
+.cap-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.cap-card.open .cap-body{max-height:800px}
+.cap-content{padding:0 16px 18px}
+.cap-divider{height:1px;background:var(--gray2);margin-bottom:14px}
+.cap-desc{
+  background:linear-gradient(135deg,rgba(29,111,164,.08),rgba(61,171,212,.06));
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  padding:10px 14px;
+  font-size:.84rem;color:var(--light);line-height:1.6;margin-bottom:14px;
+}
+.cap-tags{display:flex;flex-wrap:wrap;gap:7px}
+.cap-tag{
+  background:var(--gray1);border:1px solid var(--gray2);
+  color:var(--teal);font-size:.75rem;font-weight:600;
+  padding:5px 11px;border-radius:20px;
+}
+
+/* ── INCUBADORA CARDS ── */
+.incub-cards{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.incub-card{
+  background:var(--navy);border-radius:12px;
+  border-top:3px solid var(--accent);
+  padding:18px;
+}
+.incub-card-icon{
+  width:38px;height:38px;border-radius:9px;
+  background:rgba(61,171,212,.2);
+  display:flex;align-items:center;justify-content:center;margin-bottom:12px;
+}
+.incub-card-icon svg{width:20px;height:20px;fill:var(--accent)}
+.incub-card h3{font-size:.95rem;font-weight:700;color:white;margin-bottom:6px}
+.incub-card p{font-size:.83rem;color:rgba(255,255,255,.65);line-height:1.55}
+
+/* ── HIGHLIGHT ── */
+.highlight{
+  margin:0 16px 14px;
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  border-radius:12px;padding:18px;
+  border-top:3px solid var(--accent);
+}
+.highlight h3{font-size:.95rem;font-weight:700;color:var(--accent);margin-bottom:6px}
+.highlight p{font-size:.83rem;color:rgba(255,255,255,.7);line-height:1.55}
+
+/* ── STEPS ── */
+.steps{padding:6px 16px 0;display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:14px;padding-bottom:20px;position:relative}
+.step:not(:last-child)::after{
+  content:'';position:absolute;left:15px;top:36px;
+  width:2px;height:calc(100% - 16px);background:var(--gray2);
+}
+.step-num{
+  width:32px;height:32px;flex-shrink:0;
+  background:var(--navy);color:white;
+  font-weight:800;font-size:.85rem;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;
+}
+.step-title{font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:3px}
+.step-desc{font-size:.8rem;color:var(--light);line-height:1.5}
+
+/* ── FOOTER ── */
+.page-footer{
+  margin-top:20px;padding:20px;
+  text-align:center;
+  background:var(--white);border-top:1px solid var(--gray2);
+}
+.footer-logo{font-size:1.1rem;font-weight:900;color:var(--navy)}
+.footer-logo span{color:var(--accent)}
+.footer-sub{font-size:.75rem;color:var(--gray3);margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-logo">CB+I</div>
+    <div>
+      <div class="brand-name">CBI<span>+I</span></div>
+      <span class="brand-sub">Centro Biotecnológico de I+I</span>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Biotecnología aplicada</div>
+  <h1>Ciencia al servicio de <em>tu empresa</em></h1>
+  <p>Servicios de laboratorio, capacitación especializada e incubación para organizaciones que buscan incorporar biotecnología de vanguardia.</p>
+</div>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs">
+  <button class="tab-btn active" onclick="switchTab('capacidades',this)">
+    <svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+    Capacidades
+  </button>
+  <button class="tab-btn" onclick="switchTab('formacion',this)">
+    <svg viewBox="0 0 24 24"><path d="M12 3L2 8l10 5 10-5-10-5zM2 13l10 5 10-5M2 18l10 5 10-5"/></svg>
+    Formación
+  </button>
+  <button class="tab-btn" onclick="switchTab('incubadora',this)">
+    <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+    Incubadora
+  </button>
+</nav>
+
+<!-- ═══════════════════════════ CAPACIDADES -->
+<section id="sec-capacidades" class="section active">
+  <div class="sec-intro">
+    <div class="sec-label">Prestación de servicios</div>
+    <h2 class="sec-title">Capacidades de laboratorio</h2>
+    <p class="sec-desc">Contamos con infraestructura y expertise para brindar servicios analíticos y experimentales en cuatro grandes áreas biotecnológicas. Seleccioná un área para ver en detalle lo que hacemos.</p>
+  </div>
+
+  <div class="area-list">
+
+    <!-- ÁREA MOLECULAR -->
+    <div class="area-card" id="area-molecular">
+      <div class="area-header" onclick="toggleArea('area-molecular')">
+        <div class="area-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm0 16a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm8-8a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM4 10a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm11.5-5.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm-7 11a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm7 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm-7-11a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>
+        </div>
+        <div class="area-info">
+          <div class="area-name">Área Molecular</div>
+          <div class="area-count">8 servicios disponibles</div>
+        </div>
+        <div class="area-chevron">
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+      <div class="area-body">
+        <div class="area-content">
+          <div class="area-divider"></div>
+          <div class="area-description">
+            La biología molecular estudia los mecanismos moleculares que regulan los procesos biológicos. En CBI+I contamos con capacidad para extraer, analizar e identificar material genético de diversas fuentes, aplicando desde técnicas clásicas hasta secuenciación de nueva generación.
+          </div>
+          <div class="service-items">
+            <div class="service-item">Extracción de material genético (ADN/ARN) y cuantificación — desde muestras vegetales, microbianas, eucariotas y matrices biológicas</div>
+            <div class="service-item">PCR tiempo final y tiempo real (qPCR) — amplificación y cuantificación de secuencias de interés</div>
+            <div class="service-item">Análisis de expresión génica mediante RT-PCR</div>
+            <div class="service-item">Identificación de microorganismos por marcadores 16S, 18S e ITS</div>
+            <div class="service-item">Secuenciación Sanger y metagenómica para caracterización de comunidades microbianas</div>
+            <div class="service-item">Caracterización molecular de bancos maestros y de trabajo de microorganismos</div>
+            <div class="service-item">Identificación molecular de cepas de interés</div>
+            <div class="service-item">Electroforesis en geles de agarosa y poliacrilamida</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÁREA PROTEÍNAS -->
+    <div class="area-card" id="area-proteinas">
+      <div class="area-header" onclick="toggleArea('area-proteinas')">
+        <div class="area-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zm-1-11h2v5h-2zm0 6h2v2h-2z"/></svg>
+        </div>
+        <div class="area-info">
+          <div class="area-name">Área Proteínas</div>
+          <div class="area-count">8 servicios disponibles</div>
+        </div>
+        <div class="area-chevron">
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+      <div class="area-body">
+        <div class="area-content">
+          <div class="area-divider"></div>
+          <div class="area-description">
+            El estudio de proteínas es fundamental para comprender la función biológica y el desarrollo de productos biotecnológicos. Ofrecemos desde la cuantificación básica hasta la expresión y purificación de proteínas recombinantes y el desarrollo de ensayos de detección especializados.
+          </div>
+          <div class="service-items">
+            <div class="service-item">Cuantificación de proteínas mediante métodos espectrofotométricos</div>
+            <div class="service-item">Electroforesis desnaturalizante SDS-PAGE y electroforesis nativa</div>
+            <div class="service-item">Expresión de proteínas recombinantes en sistemas procariotas y eucariotas</div>
+            <div class="service-item">Purificación de proteínas por estrategias cromatográficas (afinidad, intercambio iónico, exclusión molecular)</div>
+            <div class="service-item">Determinación de actividad enzimática específica</div>
+            <div class="service-item">Estudio de tamaño de proteínas por cromatografía de exclusión molecular</div>
+            <div class="service-item">Detección e identificación de proteínas por Western blot</div>
+            <div class="service-item">Desarrollo y validación de ensayos ELISA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÁREA BIO CELULAR -->
+    <div class="area-card" id="area-celular">
+      <div class="area-header" onclick="toggleArea('area-celular')">
+        <div class="area-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        </div>
+        <div class="area-info">
+          <div class="area-name">Área Biología Celular</div>
+          <div class="area-count">5 servicios disponibles</div>
+        </div>
+        <div class="area-chevron">
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+      <div class="area-body">
+        <div class="area-content">
+          <div class="area-divider"></div>
+          <div class="area-description">
+            La biología celular permite estudiar el comportamiento de las células en condiciones controladas, clave para el desarrollo de nuevas terapias y productos biológicos. Disponemos de instalaciones para cultivo, análisis de viabilidad y almacenamiento criogénico de líneas celulares.
+          </div>
+          <div class="service-items">
+            <div class="service-item">Estudio de citotoxicidad de compuestos, extractos y productos en líneas celulares</div>
+            <div class="service-item">Análisis de capacidad antiinflamatoria in vitro</div>
+            <div class="service-item">Microscopía óptica y de fluorescencia (epifluorescencia) para análisis morfológico y funcional</div>
+            <div class="service-item">Generación y mantenimiento de bancos celulares</div>
+            <div class="service-item">Almacenamiento criogénico de bancos celulares en nitrógeno líquido</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÁREA MICROBIOLOGÍA -->
+    <div class="area-card" id="area-micro">
+      <div class="area-header" onclick="toggleArea('area-micro')">
+        <div class="area-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 19.62a1 1 0 1 0 1.77.92C7.08 17.67 8.94 13.07 17 12v3l5-4-5-4v3z"/></svg>
+        </div>
+        <div class="area-info">
+          <div class="area-name">Área Microbiología</div>
+          <div class="area-count">6 servicios disponibles</div>
+        </div>
+        <div class="area-chevron">
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+      <div class="area-body">
+        <div class="area-content">
+          <div class="area-divider"></div>
+          <div class="area-description">
+            Nuestra área de microbiología cubre desde el aislamiento e identificación de microorganismos hasta el desarrollo de fermentaciones y la gestión de bancos de cepas. Trabajamos con bacterias, hongos y levaduras de interés industrial, clínico y ambiental.
+          </div>
+          <div class="service-items">
+            <div class="service-item">Aislamiento bacteriano y fúngico a partir de diversas matrices</div>
+            <div class="service-item">Recuento de aerobios totales, coliformes totales y microaerofílicos</div>
+            <div class="service-item">Identificación bioquímica de microorganismos</div>
+            <div class="service-item">Identificación de patógenos vegetales y animales</div>
+            <div class="service-item">Fermentaciones de microorganismos a medida para producción de metabolitos de interés</div>
+            <div class="service-item">Almacenamiento y gestión de bancos microbiológicos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTROS ANÁLISIS -->
+    <div class="area-card" id="area-otros">
+      <div class="area-header" onclick="toggleArea('area-otros')">
+        <div class="area-icon">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        </div>
+        <div class="area-info">
+          <div class="area-name">Otros análisis y caracterización</div>
+          <div class="area-count">11 servicios adicionales</div>
+        </div>
+        <div class="area-chevron">
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+      <div class="area-body">
+        <div class="area-content">
+          <div class="area-divider"></div>
+          <div class="area-description">
+            Además de las cuatro áreas principales, contamos con una amplia gama de técnicas analíticas y de caracterización para dar soporte a proyectos con requerimientos específicos.
+          </div>
+          <div class="service-items">
+            <div class="service-item">Cromatografía en capa fina (TLC)</div>
+            <div class="service-item">Determinación de azúcares reductores (método DNS)</div>
+            <div class="service-item">Análisis de muestras por absorbancia, fluorescencia y luminiscencia</div>
+            <div class="service-item">Análisis de diámetro de nanopartículas en suspensión (DLS)</div>
+            <div class="service-item">Análisis de carga superficial de nanopartículas (potencial Z)</div>
+            <div class="service-item">Análisis de muestras por HPLC</div>
+            <div class="service-item">Medición de pH y conductividad</div>
+            <div class="service-item">Liofilización de muestras y productos</div>
+            <div class="service-item">Esterilización de medios de cultivo y materiales</div>
+            <div class="service-item">Determinación de peso seco</div>
+            <div class="service-item">Técnicas de caracterización bioquímica general</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════ FORMACIÓN -->
+<section id="sec-formacion" class="section">
+  <div class="sec-intro">
+    <div class="sec-label">Capacitación de personal</div>
+    <h2 class="sec-title">Formación a medida</h2>
+    <p class="sec-desc">Diseñamos programas teóricos y prácticos completamente adaptados a las necesidades de cada organización, con más de 15 años de experiencia formando equipos en empresas de todo porte.</p>
+  </div>
+
+  <div class="cap-cards">
+
+    <!-- TALLERES TEÓRICOS -->
+    <div class="cap-card" id="cap-teorico">
+      <div class="cap-header" onclick="toggleCap('cap-teorico')">
+        <div class="cap-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zm0 12.08L4.13 10.6 12 6.08l7.87 4.52L12 15.08zM1 17v2l11 6 11-6v-2l-11 6-11-6z"/></svg>
+        </div>
+        <div class="cap-title">Talleres Teóricos</div>
+        <div class="cap-chevron">
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+      <div class="cap-body">
+        <div class="cap-content">
+          <div class="cap-divider"></div>
+          <div class="cap-desc">
+            Diseñamos talleres teóricos a medida que permiten a tu equipo dominar tecnologías específicas. Cubrimos desde fundamentos hasta aplicaciones avanzadas, adaptados a las necesidades particulares de cada organización.
+          </div>
+          <div class="cap-tags">
+            <span class="cap-tag">Biología Molecular</span>
+            <span class="cap-tag">Proteínas</span>
+            <span class="cap-tag">Biología Celular</span>
+            <span class="cap-tag">Ingeniería Genética</span>
+            <span class="cap-tag">Microbiología</span>
+            <span class="cap-tag">Nanotecnología</span>
+            <span class="cap-tag">Bioprocesos</span>
+            <span class="cap-tag">Y más…</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TALLERES PRÁCTICOS -->
+    <div class="cap-card" id="cap-practico">
+      <div class="cap-header" onclick="toggleCap('cap-practico')">
+        <div class="cap-icon">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        </div>
+        <div class="cap-title">Talleres Prácticos</div>
+        <div class="cap-chevron">
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+      <div class="cap-body">
+        <div class="cap-content">
+          <div class="cap-divider"></div>
+          <div class="cap-desc">
+            Experiencias hands-on que capacitan a los equipos para operar tecnologías de laboratorio de manera eficiente, combinando fundamentos teóricos con equipamiento de última generación.
+          </div>
+          <div class="cap-tags">
+            <span class="cap-tag">Microscopía óptica y fluorescencia</span>
+            <span class="cap-tag">Cromatografía líquida (HPLC)</span>
+            <span class="cap-tag">Técnicas moleculares</span>
+            <span class="cap-tag">Inmunoidentificación</span>
+            <span class="cap-tag">Fermentación</span>
+            <span class="cap-tag">Biología celular</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSFERENCIA TECNOLÓGICA -->
+    <div class="cap-card" id="cap-transfer">
+      <div class="cap-header" onclick="toggleCap('cap-transfer')">
+        <div class="cap-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 19.62a1 1 0 1 0 1.77.92C7.08 17.67 8.94 13.07 17 12v3l5-4-5-4v3z"/></svg>
+        </div>
+        <div class="cap-title">Transferencia Tecnológica</div>
+        <div class="cap-chevron">
+          <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+      <div class="cap-body">
+        <div class="cap-content">
+          <div class="cap-divider"></div>
+          <div class="cap-desc">
+            Facilitamos la incorporación de nuevas tecnologías en su empresa con un programa que combina formación teórica y práctica. Acompañamos en cada etapa del proceso.
+          </div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div>
+                <div class="step-title">Diagnóstico de necesidades</div>
+                <div class="step-desc">Identificamos junto a su equipo las brechas tecnológicas y objetivos a cubrir.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div>
+                <div class="step-title">Diseño del programa</div>
+                <div class="step-desc">Desarrollamos un plan de capacitación adaptado a su realidad organizacional.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div>
+                <div class="step-title">Implementación</div>
+                <div class="step-desc">Ejecutamos el programa con equipamiento de laboratorio y formadores expertos.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div>
+                <div class="step-title">Seguimiento</div>
+                <div class="step-desc">Acompañamos a su equipo hasta consolidar la aplicación real de los conocimientos.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="highlight">
+    <h3>+15 años formando equipos</h3>
+    <p>Generamos capacitaciones completamente a medida en base a sus requerimientos, con el fin de aumentar la eficiencia y competencia técnica de su organización.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ INCUBADORA -->
+<section id="sec-incubadora" class="section">
+  <div class="sec-intro">
+    <div class="sec-label">Incubadora de empresas</div>
+    <h2 class="sec-title">Hacemos posible que su equipo logre sus objetivos</h2>
+    <p class="sec-desc">Acompañamos empresas e instituciones en cada etapa de su desarrollo biotecnológico, poniendo a disposición infraestructura, conocimiento y red de contactos especializados.</p>
+  </div>
+
+  <div class="incub-cards">
+    <div class="incub-card">
+      <div class="incub-card-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 10L2 7v10l10 5 10-5V7l-10 5z"/></svg>
+      </div>
+      <h3>Infraestructura de laboratorio</h3>
+      <p>Acceso a equipamiento especializado de última generación y espacios de trabajo adecuados para el desarrollo de proyectos biotecnológicos, sin la necesidad de invertir en infraestructura propia.</p>
+    </div>
+
+    <div class="incub-card">
+      <div class="incub-card-icon">
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      </div>
+      <h3>Mentoría científica</h3>
+      <p>Equipo de profesionales con amplia trayectoria en biotecnología disponibles para orientar y acompañar el desarrollo de su proyecto desde la idea hasta la aplicación concreta.</p>
+    </div>
+
+    <div class="incub-card">
+      <div class="incub-card-icon">
+        <svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+      </div>
+      <h3>Red de vinculación</h3>
+      <p>Conexión con instituciones académicas, organismos de financiamiento y actores clave del ecosistema biotecnológico regional para potenciar el crecimiento de su empresa.</p>
+    </div>
+
+    <div class="incub-card">
+      <div class="incub-card-icon">
+        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+      </div>
+      <h3>Desarrollo de proyectos I+D</h3>
+      <p>Apoyo integral en la formulación, ejecución y evaluación de proyectos de investigación y desarrollo de base biotecnológica, desde la concepción hasta la validación de resultados.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <div class="footer-logo">CBI<span>+I</span></div>
+  <div class="footer-sub">Centro Biotecnológico de Investigación e Innovación · Montevideo, Uruguay</div>
+</footer>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: document.querySelector('.nav-tabs').offsetTop - 64, behavior: 'smooth'});
+}
+
+function toggleArea(id) {
+  const card = document.getElementById(id);
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.area-card').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+
+function toggleCap(id) {
+  const card = document.getElementById(id);
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.cap-card').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+</script>
+</body>
+</html>
